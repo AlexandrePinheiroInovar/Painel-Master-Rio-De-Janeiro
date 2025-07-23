@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   SidebarProvider,
   Sidebar,
@@ -53,6 +54,7 @@ const initialStatusRapidoItems: StatusRapidoItemType[] = [
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const router = useRouter();
   const { user, logout } = useAuth();
   const [allMotorcycles, setAllMotorcycles] = useState<Motorcycle[]>([]);
   const [dynamicStatusRapidoItems, setDynamicStatusRapidoItems] = useState<StatusRapidoItemType[]>(initialStatusRapidoItems);
@@ -61,6 +63,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const handleLogout = async () => {
     try {
       await logout();
+      router.push('/login'); // Redireciona para login após logout
     } catch (error) {
       console.error('Erro ao fazer logout:', error);
     }
@@ -168,7 +171,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
               priority
             />
              <div>
-              <span className="font-bold text-lg text-sidebar-foreground">Master Joinville</span>
+              <span className="font-bold text-lg text-sidebar-foreground">Rio de Janeiro</span>
               <p className="text-xs text-sidebar-foreground/80">Gestao de Locacao</p>
             </div>
           </Link>

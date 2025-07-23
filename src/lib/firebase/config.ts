@@ -49,6 +49,9 @@ try {
 
   db = getFirestore(app);
   auth = getAuth(app);
+  
+  // Log para confirmar qual projeto está sendo usado
+  console.log('Firebase configurado para o projeto:', firebaseConfig.projectId);
 } catch (error) {
   console.error('Erro ao inicializar Firebase:', error);
   throw error;

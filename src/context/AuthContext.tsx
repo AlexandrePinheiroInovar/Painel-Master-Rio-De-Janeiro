@@ -35,6 +35,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Limpar dados do Firebase antigos no localStorage (apenas uma vez)
+    if (typeof window !== 'undefined') {
+      const hasCleared = localStorage.getItem('firebase_cleared_rio_de_janeiro');
+      if (!hasCleared) {
+        // Limpar todos os dados relacionados ao Firebase
+        Object.keys(localStorage).forEach(key => {
+          if (key.startsWith('firebase:') || key.startsWith('firebaseui::')) {
+            localStorage.removeItem(key);
+          }
+        });
+        localStorage.setItem('firebase_cleared_rio_de_janeiro', 'true');
+        console.log('Cache do Firebase limpo para Rio de Janeiro');
+      }
+    }
+
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user);
       setLoading(false);
@@ -58,7 +73,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       await signInWithEmailAndPassword(auth, email, password);
       toast({
         title: "Login realizado com sucesso!",
-        description: "Bem-vindo ao Master Joinville",
+        description: "Bem-vindo ao Rio de Janeiro",
       });
     } catch (error: any) {
       let errorMessage = "Erro ao fazer login";
@@ -108,7 +123,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       toast({
         title: "Conta criada com sucesso!",
-        description: "Bem-vindo ao Master Joinville",
+        description: "Bem-vindo ao Rio de Janeiro",
       });
     } catch (error: any) {
       let errorMessage = "Erro ao criar conta";
