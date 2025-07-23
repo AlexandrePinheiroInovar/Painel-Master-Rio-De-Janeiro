@@ -97,7 +97,7 @@ export default function SignUpPage() {
                 priority
               />
               <div className="text-left">
-                <h1 className="text-2xl font-bold text-primary">Rio de Janeiro</h1>
+                <h1 className="text-2xl font-bold text-primary">LocAgora Master</h1>
                 <p className="text-sm text-muted-foreground">Gestão de Locação</p>
               </div>
             </div>
@@ -282,7 +282,7 @@ export default function SignUpPage() {
             <span className="text-xs">Sistema de Gestão de Motocicletas</span>
           </div>
           <p className="text-xs text-muted-foreground/70">
-            © 2024 Rio de Janeiro - Todos os direitos reservados
+            © 2024 LocAgora Master Rio de Janeiro - Todos os direitos reservados
           </p>
         </div>
       </div>

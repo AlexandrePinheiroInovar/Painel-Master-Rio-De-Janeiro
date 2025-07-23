@@ -50,10 +50,27 @@ try {
   db = getFirestore(app);
   auth = getAuth(app);
   
-  // Log para confirmar qual projeto está sendo usado
-  console.log('🔥 Firebase configurado para o projeto:', firebaseConfig.projectId);
+  // Log detalhado para confirmar qual projeto está sendo usado
+  console.log('🔥 =================================================');
+  console.log('🔥 FIREBASE CONFIGURADO PARA RIO DE JANEIRO');
+  console.log('🔥 =================================================');
+  console.log('🔥 Project ID:', firebaseConfig.projectId);
   console.log('🔥 Auth Domain:', firebaseConfig.authDomain);
   console.log('🔥 Storage Bucket:', firebaseConfig.storageBucket);
+  console.log('🔥 API Key (primeiros 10 chars):', firebaseConfig.apiKey.substring(0, 10) + '...');
+  console.log('🔥 =================================================');
+  
+  // Verificação adicional - garantir que NÃO é Porto Alegre
+  if (firebaseConfig.projectId.includes('porto-alegre')) {
+    console.error('❌ ERRO: Configuração ainda aponta para Porto Alegre!');
+    throw new Error('Configuração Firebase incorreta - ainda aponta para Porto Alegre');
+  }
+  
+  if (firebaseConfig.projectId === 'locagora-master-rj') {
+    console.log('✅ CONFIRMADO: Usando projeto correto do Rio de Janeiro');
+  } else {
+    console.warn('⚠️ ATENÇÃO: Project ID não é o esperado para Rio de Janeiro');
+  }
 } catch (error) {
   console.error('Erro ao inicializar Firebase:', error);
   throw error;

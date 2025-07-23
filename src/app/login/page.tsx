@@ -52,7 +52,7 @@ export default function LoginPage() {
               />
               <div className="text-left">
                 <h1 className="text-2xl font-bold text-primary">Rio de Janeiro</h1>
-                <p className="text-sm text-muted-foreground">Gestão de Locação</p>
+                <p className="text-sm text-muted-foreground">Gestão de Motos</p>
               </div>
             </div>
           </div>

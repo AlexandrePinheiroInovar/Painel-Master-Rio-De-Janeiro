@@ -37,24 +37,46 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // Limpar dados do Firebase antigos no localStorage (forçar limpeza para Rio de Janeiro)
     if (typeof window !== 'undefined') {
-      // Sempre limpar para garantir que não há dados do projeto antigo
-      console.log('Limpando cache do Firebase para Rio de Janeiro...');
+      // Sempre limpar TODOS os dados do Firebase para garantir que não há dados do projeto antigo
+      console.log('🧹 Iniciando limpeza completa do cache do Firebase para Rio de Janeiro...');
       
-      // Limpar localStorage
+      // Limpar localStorage - remover TODOS os dados do Firebase
       Object.keys(localStorage).forEach(key => {
-        if (key.startsWith('firebase:') || key.startsWith('firebaseui::') || key.includes('porto-alegre') || key.includes('joinville')) {
+        if (key.startsWith('firebase:') || key.startsWith('firebaseui::') || 
+            key.includes('porto-alegre') || key.includes('joinville') || 
+            key.includes('locagora') || key.startsWith('_firebase')) {
+          console.log(`🗑️ Removendo localStorage: ${key}`);
           localStorage.removeItem(key);
         }
       });
       
       // Limpar sessionStorage também
       Object.keys(sessionStorage).forEach(key => {
-        if (key.startsWith('firebase:') || key.startsWith('firebaseui::') || key.includes('porto-alegre') || key.includes('joinville')) {
+        if (key.startsWith('firebase:') || key.startsWith('firebaseui::') || 
+            key.includes('porto-alegre') || key.includes('joinville') || 
+            key.includes('locagora') || key.startsWith('_firebase')) {
+          console.log(`🗑️ Removendo sessionStorage: ${key}`);
           sessionStorage.removeItem(key);
         }
       });
       
-      console.log('Cache do Firebase limpo para Rio de Janeiro - Projeto: locagora-master-rj');
+      // Limpar dados IndexedDB do Firebase também
+      if ('indexedDB' in window) {
+        try {
+          indexedDB.databases().then(databases => {
+            databases.forEach(db => {
+              if (db.name && (db.name.includes('firebase') || db.name.includes('locagora'))) {
+                console.log(`🗑️ Removendo IndexedDB: ${db.name}`);
+                indexedDB.deleteDatabase(db.name);
+              }
+            });
+          });
+        } catch (error) {
+          console.log('⚠️ Não foi possível limpar IndexedDB:', error);
+        }
+      }
+      
+      console.log('✅ Cache do Firebase limpo completamente para Rio de Janeiro - Projeto: locagora-master-rj');
     }
 
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -80,7 +102,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       await signInWithEmailAndPassword(auth, email, password);
       toast({
         title: "Login realizado com sucesso!",
-        description: "Bem-vindo ao Rio de Janeiro",
+        description: "Bem-vindo à LocAgora Master Rio de Janeiro",
       });
     } catch (error: any) {
       let errorMessage = "Erro ao fazer login";
@@ -125,17 +147,37 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signUp = async (email: string, password: string, displayName: string) => {
     try {
+      console.log('👤 =================================================');
+      console.log('👤 INICIANDO CADASTRO DE USUÁRIO - RIO DE JANEIRO');
+      console.log('👤 =================================================');
+      console.log('👤 Email:', email);
+      console.log('👤 Display Name:', displayName);
+      console.log('👤 Auth Object Project:', auth.app.options.projectId);
+      console.log('👤 =================================================');
+      
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      
+      console.log('✅ Usuário criado no Firebase Auth - Project ID:', auth.app.options.projectId);
+      console.log('✅ UID do usuário:', userCredential.user.uid);
+      
       await updateProfile(userCredential.user, { displayName });
+      
+      console.log('✅ Profile atualizado com sucesso');
+      console.log('👤 =================================================');
       
       toast({
         title: "Conta criada com sucesso!",
-        description: "Bem-vindo ao Rio de Janeiro",
+        description: "Bem-vindo à LocAgora Master Rio de Janeiro",
       });
     } catch (error: any) {
+      console.error('❌ Erro no cadastro:', error);
       let errorMessage = "Erro ao criar conta";
       
       switch (error.code) {
+        case 'auth/configuration-not-found':
+        case 'auth/api-key-not-valid':
+          errorMessage = "🚨 FIREBASE AUTHENTICATION NÃO CONFIGURADO! Vá no Firebase Console e ative Authentication > Email/Password";
+          break;
         case 'auth/email-already-in-use':
           errorMessage = "Este email já está em uso";
           break;
@@ -146,7 +188,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           errorMessage = "A senha deve ter pelo menos 6 caracteres";
           break;
         default:
-          errorMessage = error.message || "Erro desconhecido";
+          errorMessage = `${error.code || 'Erro desconhecido'}: ${error.message}`;
+          console.error('Detalhes do erro:', {
+            code: error.code,
+            message: error.message,
+            projectId: auth.app.options.projectId
+          });
       }
       
       toast({
