@@ -51,7 +51,9 @@ try {
   auth = getAuth(app);
   
   // Log para confirmar qual projeto está sendo usado
-  console.log('Firebase configurado para o projeto:', firebaseConfig.projectId);
+  console.log('🔥 Firebase configurado para o projeto:', firebaseConfig.projectId);
+  console.log('🔥 Auth Domain:', firebaseConfig.authDomain);
+  console.log('🔥 Storage Bucket:', firebaseConfig.storageBucket);
 } catch (error) {
   console.error('Erro ao inicializar Firebase:', error);
   throw error;

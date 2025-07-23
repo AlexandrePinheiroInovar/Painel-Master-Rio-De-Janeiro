@@ -35,19 +35,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Limpar dados do Firebase antigos no localStorage (apenas uma vez)
+    // Limpar dados do Firebase antigos no localStorage (forçar limpeza para Rio de Janeiro)
     if (typeof window !== 'undefined') {
-      const hasCleared = localStorage.getItem('firebase_cleared_rio_de_janeiro');
-      if (!hasCleared) {
-        // Limpar todos os dados relacionados ao Firebase
-        Object.keys(localStorage).forEach(key => {
-          if (key.startsWith('firebase:') || key.startsWith('firebaseui::')) {
-            localStorage.removeItem(key);
-          }
-        });
-        localStorage.setItem('firebase_cleared_rio_de_janeiro', 'true');
-        console.log('Cache do Firebase limpo para Rio de Janeiro');
-      }
+      // Sempre limpar para garantir que não há dados do projeto antigo
+      console.log('Limpando cache do Firebase para Rio de Janeiro...');
+      
+      // Limpar localStorage
+      Object.keys(localStorage).forEach(key => {
+        if (key.startsWith('firebase:') || key.startsWith('firebaseui::') || key.includes('porto-alegre') || key.includes('joinville')) {
+          localStorage.removeItem(key);
+        }
+      });
+      
+      // Limpar sessionStorage também
+      Object.keys(sessionStorage).forEach(key => {
+        if (key.startsWith('firebase:') || key.startsWith('firebaseui::') || key.includes('porto-alegre') || key.includes('joinville')) {
+          sessionStorage.removeItem(key);
+        }
+      });
+      
+      console.log('Cache do Firebase limpo para Rio de Janeiro - Projeto: locagora-master-rj');
     }
 
     const unsubscribe = onAuthStateChanged(auth, (user) => {
