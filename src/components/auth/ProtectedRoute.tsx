@@ -15,16 +15,31 @@ export function ProtectedRoute({ children, fallback }: ProtectedRouteProps) {
   const { user, loading } = useAuth();
   const router = useRouter();
   const [isChecking, setIsChecking] = useState(true);
+  const [shouldRedirect, setShouldRedirect] = useState(false);
 
   useEffect(() => {
+    console.log('🛡️ [PROTECTED] Estado:', { user: !!user, loading, isChecking });
+    
     if (!loading) {
       if (!user) {
-        router.replace('/login');
+        console.log('🛡️ [PROTECTED] Usuário não encontrado, redirecionando...');
+        setShouldRedirect(true);
+        // Delay para evitar redirect durante hydration
+        setTimeout(() => {
+          router.replace('/login');
+        }, 100);
       } else {
+        console.log('🛡️ [PROTECTED] Usuário autenticado, liberando acesso');
         setIsChecking(false);
+        setShouldRedirect(false);
       }
     }
   }, [user, loading, router]);
+
+  // Se deve redirecionar, não renderizar nada
+  if (shouldRedirect) {
+    return null;
+  }
 
   if (loading || isChecking) {
     return fallback || (

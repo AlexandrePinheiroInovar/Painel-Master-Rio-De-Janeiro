@@ -33,30 +33,83 @@ export function useAuth() {
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [initialized, setInitialized] = useState(false);
 
   useEffect(() => {
+    let isMounted = true;
+    
     console.log('🔐 [AUTH] Iniciando AuthProvider para Rio de Janeiro');
     console.log('🔐 [AUTH] Firebase Project ID:', auth.app.options.projectId);
 
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      console.log('🔐 [AUTH] Estado de autenticação mudou:', user ? `Usuário: ${user.uid}` : 'Nenhum usuário');
-      setUser(user);
-      setLoading(false);
+    // Função para inicializar a autenticação
+    const initializeAuth = async () => {
+      try {
+        // Verificar se já existe usuário no localStorage/IndexedDB
+        const currentUser = auth.currentUser;
+        if (currentUser) {
+          console.log('🔐 [AUTH] Usuário já autenticado encontrado:', currentUser.uid);
+          if (isMounted) {
+            setUser(currentUser);
+            setLoading(false);
+            setInitialized(true);
+          }
+        }
+
+        // Configurar listener para mudanças de estado
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+          if (!isMounted) return;
+          
+          console.log('🔐 [AUTH] Estado de autenticação mudou:', user ? `Usuário: ${user.uid}` : 'Nenhum usuário');
+          
+          setUser(user);
+          setLoading(false);
+          setInitialized(true);
+          
+          // Salvar no localStorage para recuperação rápida
+          if (user) {
+            localStorage.setItem('auth_user_uid', user.uid);
+            localStorage.setItem('auth_user_email', user.email || '');
+          } else {
+            localStorage.removeItem('auth_user_uid');
+            localStorage.removeItem('auth_user_email');
+          }
+        });
+
+        return unsubscribe;
+      } catch (error) {
+        console.error('🔐 [AUTH] Erro ao inicializar autenticação:', error);
+        if (isMounted) {
+          setLoading(false);
+          setInitialized(true);
+        }
+        return () => {};
+      }
+    };
+
+    // Timeout de segurança
+    const timeout = setTimeout(() => {
+      if (isMounted && !initialized) {
+        console.log('⏰ [AUTH] Timeout atingido, forçando inicialização');
+        setLoading(false);
+        setInitialized(true);
+      }
+    }, 3000);
+
+    // Inicializar
+    initializeAuth().then(unsubscribe => {
+      if (!isMounted) return;
+      
+      return () => {
+        unsubscribe();
+        clearTimeout(timeout);
+      };
     });
 
-    // Timeout de segurança para evitar loading infinito
-    const timeout = setTimeout(() => {
-      if (loading) {
-        console.log('⏰ [AUTH] Timeout atingido, forçando loading = false');
-        setLoading(false);
-      }
-    }, 5000);
-
     return () => {
-      unsubscribe();
+      isMounted = false;
       clearTimeout(timeout);
     };
-  }, []);
+  }, [initialized]);
 
   const signIn = async (email: string, password: string) => {
     try {

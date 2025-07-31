@@ -50,15 +50,32 @@ try {
   db = getFirestore(app);
   auth = getAuth(app);
   
-  // Configurar persistência explicitamente
+  // Configurar persistência explicitamente ANTES de qualquer operação
   if (typeof window !== 'undefined') {
-    setPersistence(auth, browserLocalPersistence)
-      .then(() => {
+    // Garantir que a persistência seja configurada imediatamente
+    auth.settings = {
+      appVerificationDisabledForTesting: false
+    };
+    
+    // Tentar configurar persistência múltiplas vezes se necessário
+    const configurePersistence = async () => {
+      try {
+        await setPersistence(auth, browserLocalPersistence);
         console.log('✅ [AUTH] Persistência configurada como LOCAL STORAGE');
-      })
-      .catch((error) => {
+        return true;
+      } catch (error) {
         console.error('❌ [AUTH] Erro ao configurar persistência:', error);
-      });
+        // Tentar novamente após um pequeno delay
+        setTimeout(() => {
+          setPersistence(auth, browserLocalPersistence)
+            .then(() => console.log('✅ [AUTH] Persistência configurada (segunda tentativa)'))
+            .catch(err => console.error('❌ [AUTH] Falha na segunda tentativa:', err));
+        }, 100);
+        return false;
+      }
+    };
+    
+    configurePersistence();
   }
   
   // Log detalhado para confirmar qual projeto está sendo usado
