@@ -11,11 +11,19 @@ import { AnaliseProdutoView } from "@/components/venda-motos/analise-produto-vie
 import { VendasKpiCards } from "@/components/venda-motos/kpi/vendas-kpi-cards";
 import { DollarSign, ShieldAlert } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { hasVendaMotosAccess } from '@/lib/utils/permissions';
+import { hasVendaMotosAccess, ALLOWED_VENDA_MOTOS_USER_IDS } from '@/lib/utils/permissions';
 
 
 export default function VendaMotosPage() {
   const { user, loading } = useAuth();
+
+  // DEBUG: Logs de debug para verificar permissões
+  console.log('🔍 [VENDA-MOTOS] DEBUG - Estado atual:');
+  console.log('🔍 [VENDA-MOTOS] Loading:', loading);
+  console.log('🔍 [VENDA-MOTOS] User:', user);
+  console.log('🔍 [VENDA-MOTOS] UID do usuário:', user?.uid);
+  console.log('🔍 [VENDA-MOTOS] hasVendaMotosAccess result:', user ? hasVendaMotosAccess(user.uid) : 'user null');
+  console.log('🔍 [VENDA-MOTOS] UIDs permitidos:', ALLOWED_VENDA_MOTOS_USER_IDS);
 
   if (loading) {
     return (

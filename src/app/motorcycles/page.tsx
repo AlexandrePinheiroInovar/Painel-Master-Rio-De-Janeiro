@@ -59,11 +59,13 @@ export default function MotorcyclesPage() {
   const [isLoading, setIsLoading] = useState(true);
   const { user, loading } = useAuth();
 
-  // DEBUG: Logar UIDs permitidos e UID do usuário logado
-  if (typeof window !== 'undefined') {
-    console.log('DEBUG - UIDs permitidos para Gestão de Motos:', ALLOWED_MOTORCYCLE_USER_IDS);
-    console.log('DEBUG - UID do usuário logado:', user?.uid);
-  }
+  // DEBUG: Logs de debug melhorados para verificar permissões
+  console.log('🔍 [GESTAO-MOTOS] DEBUG - Estado atual:');
+  console.log('🔍 [GESTAO-MOTOS] Loading:', loading);
+  console.log('🔍 [GESTAO-MOTOS] User:', user);
+  console.log('🔍 [GESTAO-MOTOS] UID do usuário:', user?.uid);
+  console.log('🔍 [GESTAO-MOTOS] hasMotorcycleAccess result:', user ? hasMotorcycleAccess(user.uid) : 'user null');
+  console.log('🔍 [GESTAO-MOTOS] UIDs permitidos:', ALLOWED_MOTORCYCLE_USER_IDS);
 
   useEffect(() => {
     setIsLoading(true);

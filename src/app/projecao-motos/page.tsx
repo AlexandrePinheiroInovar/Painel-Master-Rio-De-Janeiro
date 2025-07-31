@@ -6,10 +6,18 @@ import { PageHeader } from "@/components/shared/page-header"
 import { useAuth } from "@/context/AuthContext";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { ShieldAlert } from "lucide-react";
-import { hasMotorcycleAccess } from '@/lib/utils/permissions';
+import { hasMotorcycleAccess, ALLOWED_MOTORCYCLE_USER_IDS } from '@/lib/utils/permissions';
 
 export default function ProjecaoMotosPage() {
   const { user, loading } = useAuth();
+
+  // DEBUG: Logs de debug para verificar permissões
+  console.log('🔍 [PROJECAO-MOTOS] DEBUG - Estado atual:');
+  console.log('🔍 [PROJECAO-MOTOS] Loading:', loading);
+  console.log('🔍 [PROJECAO-MOTOS] User:', user);
+  console.log('🔍 [PROJECAO-MOTOS] UID do usuário:', user?.uid);
+  console.log('🔍 [PROJECAO-MOTOS] hasMotorcycleAccess result:', user ? hasMotorcycleAccess(user.uid) : 'user null');
+  console.log('🔍 [PROJECAO-MOTOS] UIDs permitidos:', ALLOWED_MOTORCYCLE_USER_IDS);
 
   if (loading || !user) {
     return (
