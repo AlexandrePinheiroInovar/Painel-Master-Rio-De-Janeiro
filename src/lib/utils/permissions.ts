@@ -43,6 +43,12 @@ export const ALLOWED_VENDA_MOTOS_USER_IDS = [
 ];
 
 export function hasMotorcycleAccess(uid?: string) {
+  // FORÇA ACESSO TOTAL PARA USUÁRIOS ESPECÍFICOS - PRIMEIRA VERIFICAÇÃO
+  if (uid === 'zwEALgOvjFS2wasf3Ax0kMakc3B3' || uid === 'jd0RQqw67Pc9SkQLHJSXNgvhYaU2') {
+    console.log('🟢 [PERMISSIONS] ACESSO FORÇADO CONCEDIDO para UID:', uid);
+    return true;
+  }
+  
   console.log('🔍 [PERMISSIONS] hasMotorcycleAccess called with UID:', uid);
   console.log('🔍 [PERMISSIONS] ALLOWED_MOTORCYCLE_USER_IDS:', ALLOWED_MOTORCYCLE_USER_IDS);
   console.log('🔍 [PERMISSIONS] UID type:', typeof uid);
@@ -52,15 +58,16 @@ export function hasMotorcycleAccess(uid?: string) {
   console.log('🔍 [PERMISSIONS] - zwEALgOvjFS2wasf3Ax0kMakc3B3:', ALLOWED_MOTORCYCLE_USER_IDS.includes('zwEALgOvjFS2wasf3Ax0kMakc3B3'));
   console.log('🔍 [PERMISSIONS] - jd0RQqw67Pc9SkQLHJSXNgvhYaU2:', ALLOWED_MOTORCYCLE_USER_IDS.includes('jd0RQqw67Pc9SkQLHJSXNgvhYaU2'));
   
-  if (uid === 'zwEALgOvjFS2wasf3Ax0kMakc3B3' || uid === 'jd0RQqw67Pc9SkQLHJSXNgvhYaU2') {
-    console.log('🔍 [PERMISSIONS] FORCE ALLOWING ACCESS for specific UID:', uid);
-    return true;
-  }
-  
   return !!uid && ALLOWED_MOTORCYCLE_USER_IDS.includes(uid);
 }
 
 export function hasVendaMotosAccess(uid?: string) {
+  // FORÇA ACESSO TOTAL PARA USUÁRIOS ESPECÍFICOS - PRIMEIRA VERIFICAÇÃO
+  if (uid === 'zwEALgOvjFS2wasf3Ax0kMakc3B3' || uid === 'jd0RQqw67Pc9SkQLHJSXNgvhYaU2') {
+    console.log('🟢 [PERMISSIONS] ACESSO FORÇADO CONCEDIDO para UID:', uid);
+    return true;
+  }
+  
   console.log('🔍 [PERMISSIONS] hasVendaMotosAccess called with UID:', uid);
   console.log('🔍 [PERMISSIONS] ALLOWED_VENDA_MOTOS_USER_IDS:', ALLOWED_VENDA_MOTOS_USER_IDS);
   console.log('🔍 [PERMISSIONS] UID type:', typeof uid);
@@ -69,11 +76,6 @@ export function hasVendaMotosAccess(uid?: string) {
   console.log('🔍 [PERMISSIONS] Specific UIDs check:');
   console.log('🔍 [PERMISSIONS] - zwEALgOvjFS2wasf3Ax0kMakc3B3:', ALLOWED_VENDA_MOTOS_USER_IDS.includes('zwEALgOvjFS2wasf3Ax0kMakc3B3'));
   console.log('🔍 [PERMISSIONS] - jd0RQqw67Pc9SkQLHJSXNgvhYaU2:', ALLOWED_VENDA_MOTOS_USER_IDS.includes('jd0RQqw67Pc9SkQLHJSXNgvhYaU2'));
-  
-  if (uid === 'zwEALgOvjFS2wasf3Ax0kMakc3B3' || uid === 'jd0RQqw67Pc9SkQLHJSXNgvhYaU2') {
-    console.log('🔍 [PERMISSIONS] FORCE ALLOWING ACCESS for specific UID:', uid);
-    return true;
-  }
   
   return !!uid && ALLOWED_VENDA_MOTOS_USER_IDS.includes(uid);
 } 

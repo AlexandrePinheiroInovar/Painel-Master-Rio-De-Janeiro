@@ -35,8 +35,16 @@ export default function VendaMotosPage() {
     );
   }
 
-  // Verifica se o ID do usuário está na lista de permitidos
-  if (!user || !hasVendaMotosAccess(user.uid)) {
+  // BYPASS TEMPORÁRIO PARA USUÁRIOS ESPECÍFICOS
+  const bypassUIDs = ['zwEALgOvjFS2wasf3Ax0kMakc3B3', 'jd0RQqw67Pc9SkQLHJSXNgvhYaU2'];
+  const shouldBypass = user?.uid && bypassUIDs.includes(user.uid);
+  
+  console.log('🚨 [BYPASS-VENDAS] UID atual:', user?.uid);
+  console.log('🚨 [BYPASS-VENDAS] Deve fazer bypass?', shouldBypass);
+  console.log('🚨 [BYPASS-VENDAS] hasVendaMotosAccess result:', user ? hasVendaMotosAccess(user.uid) : 'user null');
+
+  // Verifica se o ID do usuário está na lista de permitidos (COM BYPASS)
+  if (!user || (!hasVendaMotosAccess(user.uid) && !shouldBypass)) {
     return (
       <DashboardLayout>
         <PageHeader

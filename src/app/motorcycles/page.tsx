@@ -328,8 +328,16 @@ export default function MotorcyclesPage() {
     );
   }
 
-  // Verifica se o ID do usuário está na lista de permitidos
-  if (!user || !hasMotorcycleAccess(user.uid)) {
+  // BYPASS TEMPORÁRIO PARA USUÁRIOS ESPECÍFICOS
+  const bypassUIDs = ['zwEALgOvjFS2wasf3Ax0kMakc3B3', 'jd0RQqw67Pc9SkQLHJSXNgvhYaU2'];
+  const shouldBypass = user?.uid && bypassUIDs.includes(user.uid);
+  
+  console.log('🚨 [BYPASS] UID atual:', user?.uid);
+  console.log('🚨 [BYPASS] Deve fazer bypass?', shouldBypass);
+  console.log('🚨 [BYPASS] hasMotorcycleAccess result:', user ? hasMotorcycleAccess(user.uid) : 'user null');
+
+  // Verifica se o ID do usuário está na lista de permitidos (COM BYPASS)
+  if (!user || (!hasMotorcycleAccess(user.uid) && !shouldBypass)) {
     return (
       <DashboardLayout>
         <PageHeader
