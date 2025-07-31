@@ -2,7 +2,7 @@
 // src/lib/firebase/config.ts
 import { initializeApp, getApp, getApps, type FirebaseApp } from "firebase/app";
 import { getFirestore, type Firestore } from "firebase/firestore";
-import { getAuth, type Auth } from "firebase/auth";
+import { getAuth, type Auth, setPersistence, browserLocalPersistence } from "firebase/auth";
 
 // Validação das variáveis de ambiente
 const requiredEnvVars = {
@@ -49,6 +49,17 @@ try {
 
   db = getFirestore(app);
   auth = getAuth(app);
+  
+  // Configurar persistência explicitamente
+  if (typeof window !== 'undefined') {
+    setPersistence(auth, browserLocalPersistence)
+      .then(() => {
+        console.log('✅ [AUTH] Persistência configurada como LOCAL STORAGE');
+      })
+      .catch((error) => {
+        console.error('❌ [AUTH] Erro ao configurar persistência:', error);
+      });
+  }
   
   // Log detalhado para confirmar qual projeto está sendo usado
   console.log('🔥 =================================================');

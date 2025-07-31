@@ -35,51 +35,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Limpar dados do Firebase antigos no localStorage (forçar limpeza para Rio de Janeiro)
-    if (typeof window !== 'undefined') {
-      // Sempre limpar TODOS os dados do Firebase para garantir que não há dados do projeto antigo
-      console.log('🧹 Iniciando limpeza completa do cache do Firebase para Rio de Janeiro...');
-      
-      // Limpar localStorage - remover TODOS os dados do Firebase
-      Object.keys(localStorage).forEach(key => {
-        if (key.startsWith('firebase:') || key.startsWith('firebaseui::') || 
-            key.includes('porto-alegre') || key.includes('joinville') || 
-            key.includes('locagora') || key.startsWith('_firebase')) {
-          console.log(`🗑️ Removendo localStorage: ${key}`);
-          localStorage.removeItem(key);
-        }
-      });
-      
-      // Limpar sessionStorage também
-      Object.keys(sessionStorage).forEach(key => {
-        if (key.startsWith('firebase:') || key.startsWith('firebaseui::') || 
-            key.includes('porto-alegre') || key.includes('joinville') || 
-            key.includes('locagora') || key.startsWith('_firebase')) {
-          console.log(`🗑️ Removendo sessionStorage: ${key}`);
-          sessionStorage.removeItem(key);
-        }
-      });
-      
-      // Limpar dados IndexedDB do Firebase também
-      if ('indexedDB' in window) {
-        try {
-          indexedDB.databases().then(databases => {
-            databases.forEach(db => {
-              if (db.name && (db.name.includes('firebase') || db.name.includes('locagora'))) {
-                console.log(`🗑️ Removendo IndexedDB: ${db.name}`);
-                indexedDB.deleteDatabase(db.name);
-              }
-            });
-          });
-        } catch (error) {
-          console.log('⚠️ Não foi possível limpar IndexedDB:', error);
-        }
-      }
-      
-      console.log('✅ Cache do Firebase limpo completamente para Rio de Janeiro - Projeto: locagora-master-rj');
-    }
+    console.log('🔐 [AUTH] Iniciando AuthProvider para Rio de Janeiro');
+    console.log('🔐 [AUTH] Firebase Project ID:', auth.app.options.projectId);
 
     const unsubscribe = onAuthStateChanged(auth, (user) => {
+      console.log('🔐 [AUTH] Estado de autenticação mudou:', user ? `Usuário: ${user.uid}` : 'Nenhum usuário');
       setUser(user);
       setLoading(false);
     });
@@ -87,15 +47,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Timeout de segurança para evitar loading infinito
     const timeout = setTimeout(() => {
       if (loading) {
+        console.log('⏰ [AUTH] Timeout atingido, forçando loading = false');
         setLoading(false);
       }
-    }, 3000);
+    }, 5000);
 
     return () => {
       unsubscribe();
       clearTimeout(timeout);
     };
-  }, [loading]);
+  }, []);
 
   const signIn = async (email: string, password: string) => {
     try {
