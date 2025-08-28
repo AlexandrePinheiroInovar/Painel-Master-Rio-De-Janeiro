@@ -18,6 +18,15 @@ export const ALLOWED_MOTORCYCLE_USER_IDS = [
   "YlEeKuUR1HRwZBjOk3rWHQBZFC92", // Novo UID autorizado - Admin
   "jd0RQqw67Pc9SkQLHJSXNgvhYaU2", // Novo UID autorizado
   "zwEALgOvjFS2wasf3Ax0kMakc3B3", // Novo UID autorizado
+  "lG3RJBdCl4Mady5OUIyzL0ShEpj2", // Novo UID liberado
+  "FFBUeFWS4gfEpekmoVEVGPqvVrg2", // Novo UID liberado
+  "5qHVBpyArcNlcTsPc32pgeaQXKq2", // Novo UID liberado
+  "WmIXuHa9VQXI6gxAo5m4xLj36KF2", // Novo UID liberado
+  "5AXjFoJ00HNQ2Iq0PO5BAb2TAB32", // Novo UID liberado
+  "SmpaXjabZCYaGAbNMtrXiVBXiRD3", // Novo UID liberado
+  "MlbE7cPyL5fJSY0xFJpSM4k1BET2", // Novo UID liberado
+  "2Y6dr4qa6fXvoJ4sr7lTND84d4v1", // Novo UID liberado
+  "LB723QZYTtXz9GDcLX21LAkj8lh2", // Novo UID liberado
   // Adicione aqui outros UIDs permitidos
 ];
 
@@ -39,13 +48,23 @@ export const ALLOWED_VENDA_MOTOS_USER_IDS = [
   "YlEeKuUR1HRwZBjOk3rWHQBZFC92", // Novo UID autorizado - Admin
   "jd0RQqw67Pc9SkQLHJSXNgvhYaU2", // Novo UID autorizado
   "zwEALgOvjFS2wasf3Ax0kMakc3B3", // Novo UID autorizado
+  "lG3RJBdCl4Mady5OUIyzL0ShEpj2", // Novo UID liberado
+  "FFBUeFWS4gfEpekmoVEVGPqvVrg2", // Novo UID liberado
+  "5qHVBpyArcNlcTsPc32pgeaQXKq2", // Novo UID liberado
+  "WmIXuHa9VQXI6gxAo5m4xLj36KF2", // Novo UID liberado
+  "5AXjFoJ00HNQ2Iq0PO5BAb2TAB32", // Novo UID liberado
+  "SmpaXjabZCYaGAbNMtrXiVBXiRD3", // Novo UID liberado
+  "MlbE7cPyL5fJSY0xFJpSM4k1BET2", // Novo UID liberado
+  "2Y6dr4qa6fXvoJ4sr7lTND84d4v1", // Novo UID liberado
+  "LB723QZYTtXz9GDcLX21LAkj8lh2", // Novo UID liberado
   // Adicione aqui outros UIDs permitidos
 ];
 
 export function hasMotorcycleAccess(uid?: string) {
-  // FORÇA ACESSO TOTAL PARA USUÁRIOS ESPECÍFICOS - PRIMEIRA VERIFICAÇÃO
+  // 🚀 FORÇA ACESSO TOTAL PARA USUÁRIOS ESPECÍFICOS - BYPASS COMPLETO
   if (uid === 'zwEALgOvjFS2wasf3Ax0kMakc3B3' || uid === 'jd0RQqw67Pc9SkQLHJSXNgvhYaU2') {
-    console.log('🟢 [PERMISSIONS] ACESSO FORÇADO CONCEDIDO para UID:', uid);
+    console.log('🚀 [SUPER-ACCESS] ACESSO TOTAL GARANTIDO para UID:', uid);
+    console.log('🚀 [SUPER-ACCESS] Usuário com privilégios máximos - BYPASS ATIVO');
     return true;
   }
   
@@ -62,9 +81,10 @@ export function hasMotorcycleAccess(uid?: string) {
 }
 
 export function hasVendaMotosAccess(uid?: string) {
-  // FORÇA ACESSO TOTAL PARA USUÁRIOS ESPECÍFICOS - PRIMEIRA VERIFICAÇÃO
+  // 🚀 FORÇA ACESSO TOTAL PARA USUÁRIOS ESPECÍFICOS - BYPASS COMPLETO
   if (uid === 'zwEALgOvjFS2wasf3Ax0kMakc3B3' || uid === 'jd0RQqw67Pc9SkQLHJSXNgvhYaU2') {
-    console.log('🟢 [PERMISSIONS] ACESSO FORÇADO CONCEDIDO para UID:', uid);
+    console.log('🚀 [SUPER-ACCESS] ACESSO TOTAL GARANTIDO para UID:', uid);
+    console.log('🚀 [SUPER-ACCESS] Usuário com privilégios máximos - BYPASS ATIVO');
     return true;
   }
   
@@ -78,4 +98,21 @@ export function hasVendaMotosAccess(uid?: string) {
   console.log('🔍 [PERMISSIONS] - jd0RQqw67Pc9SkQLHJSXNgvhYaU2:', ALLOWED_VENDA_MOTOS_USER_IDS.includes('jd0RQqw67Pc9SkQLHJSXNgvhYaU2'));
   
   return !!uid && ALLOWED_VENDA_MOTOS_USER_IDS.includes(uid);
+}
+
+// 🚀 FUNÇÃO PARA VERIFICAR SE É SUPER USUÁRIO
+export function isSuperUser(uid?: string): boolean {
+  const superUsers = ['zwEALgOvjFS2wasf3Ax0kMakc3B3', 'jd0RQqw67Pc9SkQLHJSXNgvhYaU2'];
+  const isSuper = !!uid && superUsers.includes(uid);
+  
+  if (isSuper) {
+    console.log('👑 [SUPER-USER] Super usuário identificado:', uid);
+  }
+  
+  return isSuper;
+}
+
+// 🚀 FUNÇÃO GERAL DE ACESSO (para futuras extensões)
+export function hasFullAccess(uid?: string): boolean {
+  return isSuperUser(uid);
 } 
