@@ -68,6 +68,12 @@ export function hasMotorcycleAccess(uid?: string) {
     return true;
   }
   
+  // 🚨 BYPASS ESPECIAL PARA UID DE TESTE
+  if (uid === 'lG3RJBdCl4Mady5OUIyzL0ShEpj2') {
+    console.log('🚨 [TESTE-UID] ACESSO DIRETO PARA UID DE TESTE:', uid);
+    return true;
+  }
+  
   console.log('🔍 [PERMISSIONS] hasMotorcycleAccess called with UID:', uid);
   console.log('🔍 [PERMISSIONS] ALLOWED_MOTORCYCLE_USER_IDS:', ALLOWED_MOTORCYCLE_USER_IDS);
   console.log('🔍 [PERMISSIONS] UID type:', typeof uid);
@@ -76,6 +82,7 @@ export function hasMotorcycleAccess(uid?: string) {
   console.log('🔍 [PERMISSIONS] Specific UIDs check:');
   console.log('🔍 [PERMISSIONS] - zwEALgOvjFS2wasf3Ax0kMakc3B3:', ALLOWED_MOTORCYCLE_USER_IDS.includes('zwEALgOvjFS2wasf3Ax0kMakc3B3'));
   console.log('🔍 [PERMISSIONS] - jd0RQqw67Pc9SkQLHJSXNgvhYaU2:', ALLOWED_MOTORCYCLE_USER_IDS.includes('jd0RQqw67Pc9SkQLHJSXNgvhYaU2'));
+  console.log('🔍 [PERMISSIONS] - lG3RJBdCl4Mady5OUIyzL0ShEpj2:', ALLOWED_MOTORCYCLE_USER_IDS.includes('lG3RJBdCl4Mady5OUIyzL0ShEpj2'));
   
   return !!uid && ALLOWED_MOTORCYCLE_USER_IDS.includes(uid);
 }
@@ -88,6 +95,12 @@ export function hasVendaMotosAccess(uid?: string) {
     return true;
   }
   
+  // 🚨 BYPASS ESPECIAL PARA UID DE TESTE
+  if (uid === 'lG3RJBdCl4Mady5OUIyzL0ShEpj2') {
+    console.log('🚨 [TESTE-UID] ACESSO DIRETO PARA UID DE TESTE:', uid);
+    return true;
+  }
+  
   console.log('🔍 [PERMISSIONS] hasVendaMotosAccess called with UID:', uid);
   console.log('🔍 [PERMISSIONS] ALLOWED_VENDA_MOTOS_USER_IDS:', ALLOWED_VENDA_MOTOS_USER_IDS);
   console.log('🔍 [PERMISSIONS] UID type:', typeof uid);
@@ -96,6 +109,7 @@ export function hasVendaMotosAccess(uid?: string) {
   console.log('🔍 [PERMISSIONS] Specific UIDs check:');
   console.log('🔍 [PERMISSIONS] - zwEALgOvjFS2wasf3Ax0kMakc3B3:', ALLOWED_VENDA_MOTOS_USER_IDS.includes('zwEALgOvjFS2wasf3Ax0kMakc3B3'));
   console.log('🔍 [PERMISSIONS] - jd0RQqw67Pc9SkQLHJSXNgvhYaU2:', ALLOWED_VENDA_MOTOS_USER_IDS.includes('jd0RQqw67Pc9SkQLHJSXNgvhYaU2'));
+  console.log('🔍 [PERMISSIONS] - lG3RJBdCl4Mady5OUIyzL0ShEpj2:', ALLOWED_VENDA_MOTOS_USER_IDS.includes('lG3RJBdCl4Mady5OUIyzL0ShEpj2'));
   
   return !!uid && ALLOWED_VENDA_MOTOS_USER_IDS.includes(uid);
 }
