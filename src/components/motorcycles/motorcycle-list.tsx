@@ -36,6 +36,8 @@ const getStatusBadgeVariant = (status?: MotorcycleStatus) => {
     case 'relocada': return 'default';
     case 'indisponivel_rastreador': return 'destructive';
     case 'indisponivel_emplacamento': return 'destructive';
+    case 'furto_roubo': return 'destructive';
+    case 'apropriacao_indebita': return 'destructive';
     default: return 'outline';
   }
 };
@@ -51,6 +53,8 @@ const getStatusBadgeClassName = (status?: MotorcycleStatus) => {
     case 'relocada': return 'bg-blue-500 hover:bg-blue-600 text-white border-blue-500';
     case 'indisponivel_rastreador': return 'bg-orange-500 hover:bg-orange-600 text-white border-orange-500';
     case 'indisponivel_emplacamento': return 'bg-purple-500 hover:bg-purple-600 text-white border-purple-500';
+    case 'furto_roubo': return 'bg-red-600 hover:bg-red-700 text-white border-red-600';
+    case 'apropriacao_indebita': return 'bg-pink-600 hover:bg-pink-700 text-white border-pink-600';
     default: return 'bg-gray-200 text-gray-700 border-gray-400';
   }
 }
@@ -67,6 +71,8 @@ const translateStatus = (status?: MotorcycleStatus): string => {
     case 'relocada': return 'Relocada';
     case 'indisponivel_rastreador': return 'Indisponível Rastreador';
     case 'indisponivel_emplacamento': return 'Indisponível Emplacamento';
+    case 'furto_roubo': return 'Furto/Roubo';
+    case 'apropriacao_indebita': return 'Apropriação Indébita';
     default:
       const s = status as string;
       return s.charAt(0).toUpperCase() + s.slice(1);
@@ -92,12 +98,13 @@ export function MotorcycleList({ filters, motorcycles, onUpdateStatus, onDeleteM
     return motorcycles.filter(moto => {
       const statusMatch = filters.status === 'all' || moto.status === filters.status;
       const modelMatch = filters.model === 'all' || (moto.model || '').toLowerCase().includes(filters.model.toLowerCase());
+      const colorMatch = filters.color === 'all' || moto.color === filters.color;
       const searchTermMatch = filters.searchTerm === '' ||
         (moto.placa || '').toLowerCase().includes(filters.searchTerm.toLowerCase()) ||
         (moto.franqueado || '').toLowerCase().includes(filters.searchTerm.toLowerCase()) ||
         (moto.model || '').toLowerCase().includes(filters.searchTerm.toLowerCase());
 
-      return statusMatch && modelMatch && searchTermMatch;
+      return statusMatch && modelMatch && colorMatch && searchTermMatch;
     });
   }, [filters, motorcycles]);
 
@@ -124,6 +131,7 @@ export function MotorcycleList({ filters, motorcycles, onUpdateStatus, onDeleteM
               <TableHead>Placa</TableHead>
               <TableHead>Modelo</TableHead>
               <TableHead>Status</TableHead>
+              <TableHead>Cor</TableHead>
               <TableHead>Tipo</TableHead>
               <TableHead>Franqueado</TableHead>
               <TableHead>Valor Semanal</TableHead>
@@ -163,6 +171,7 @@ export function MotorcycleList({ filters, motorcycles, onUpdateStatus, onDeleteM
                         {translateStatus(moto.status)}
                       </Badge>
                     </TableCell>
+                    <TableCell className="capitalize">{moto.color || 'N/Definido'}</TableCell>
                     <TableCell className="capitalize">{moto.type ? (moto.type === 'nova' ? 'Nova' : 'Usada') : 'N/Definido'}</TableCell>
                     <TableCell>{moto.franqueado || 'N/Definido'}</TableCell>
                     <TableCell>
@@ -219,6 +228,12 @@ export function MotorcycleList({ filters, motorcycles, onUpdateStatus, onDeleteM
                           </DropdownMenuItem>
                           <DropdownMenuItem onClick={() => onUpdateStatus(moto.id, 'indisponivel_emplacamento')}>
                             <XCircle className="mr-2 h-4 w-4 text-purple-500" /> Indisponível Emplacamento
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => onUpdateStatus(moto.id, 'furto_roubo')}>
+                            <XCircle className="mr-2 h-4 w-4 text-red-600" /> Furto/Roubo
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => onUpdateStatus(moto.id, 'apropriacao_indebita')}>
+                            <XCircle className="mr-2 h-4 w-4 text-pink-600" /> Apropriação Indébita
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
                           <DropdownMenuItem

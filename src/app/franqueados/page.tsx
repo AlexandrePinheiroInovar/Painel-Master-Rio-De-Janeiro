@@ -134,6 +134,8 @@ export default function FranqueadosPage() {
             alugada: 0,
             manutencao: 0,
             relocada: 0,
+            furto_roubo: 0,
+            apropriacao_indebita: 0,
             indefinido: 0,
           },
           totalGeral: 0,
@@ -142,6 +144,8 @@ export default function FranqueadosPage() {
 
       const status = moto.status;
       if (status && (status === 'active' || status === 'alugada' || status === 'manutencao' || status === 'relocada')) {
+        franchiseeStats[frName].counts[status]++;
+      } else if (status && (status === 'furto_roubo' || status === 'apropriacao_indebita')) {
         franchiseeStats[frName].counts[status]++;
       } else if (status && (status === 'recolhida' || status === 'inadimplente' || status === 'indisponivel_rastreador' || status === 'indisponivel_emplacamento')) {
         // Not displayed, but counted for total
@@ -164,6 +168,8 @@ export default function FranqueadosPage() {
           active: stats.counts.active,
           manutencao: stats.counts.manutencao,
           relocada: stats.counts.relocada,
+          furto_roubo: stats.counts.furto_roubo,
+          apropriacao_indebita: stats.counts.apropriacao_indebita,
         },
         totalGeral: stats.totalGeral,
         percentLocadas,

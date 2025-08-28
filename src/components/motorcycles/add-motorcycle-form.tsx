@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/select";
 import { CalendarIcon, Save, XIcon, Edit, PlusCircle } from "lucide-react";
 import { MotorcycleIcon as TitleIcon } from '@/components/icons/motorcycle-icon';
-import type { Motorcycle, MotorcycleStatus, MotorcycleType } from "@/lib/types";
+import type { Motorcycle, MotorcycleStatus, MotorcycleType, MotorcycleColor } from "@/lib/types";
 import { DialogHeader, DialogTitle, DialogFooter, DialogClose } from "@/components/ui/dialog";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
@@ -42,6 +42,8 @@ const motorcycleStatusOptions: { value: MotorcycleStatus; label: string }[] = [
   { value: 'manutencao', label: 'Manutenção' },
   { value: 'indisponivel_rastreador', label: 'Indisponível Rastreador' },
   { value: 'indisponivel_emplacamento', label: 'Indisponível Emplacamento' },
+  { value: 'furto_roubo', label: 'Furto/Roubo' },
+  { value: 'apropriacao_indebita', label: 'Apropriação Indébita' },
 ];
 
 const motorcycleTypeOptions: { value: MotorcycleType; label: string }[] = [
@@ -49,20 +51,31 @@ const motorcycleTypeOptions: { value: MotorcycleType; label: string }[] = [
   { value: 'usada', label: 'Usada' },
 ];
 
+const motorcycleColorOptions: { value: MotorcycleColor; label: string }[] = [
+  { value: 'branca', label: 'Branca' },
+  { value: 'preta', label: 'Preta' },
+  { value: 'azul', label: 'Azul' },
+  { value: 'vermelha', label: 'Vermelha' },
+  { value: 'cinza', label: 'Cinza' },
+];
+
 const motorcycleModelOptions = [
-  { value: 'SHINERAY SHI 175 CARBURADA', label: 'SHINERAY SHI 175 CARBURADA' },
-  { value: 'SHINERAY SHI 175 INJETADA', label: 'SHINERAY SHI 175 INJETADA' },
-  { value: 'DAFRA NH190', label: 'DAFRA NH190' },
-  { value: 'HAOJUE DK 150', label: 'HAOJUE DK 150' },
-  { value: 'HAOJUE DK160', label: 'HAOJUE DK160' },
-  { value: 'SHINERAY XY150', label: 'SHINERAY XY150' },
+  { value: 'SHI 175 Carburada', label: 'SHI 175 Carburada' },
+  { value: 'SHI 175 Injetada', label: 'SHI 175 Injetada' },
+  { value: 'JEF 150', label: 'JEF 150' },
+  { value: 'DK 150', label: 'DK 150' },
+  { value: 'DK 160', label: 'DK 160' },
+  { value: 'NK 150', label: 'NK 150' },
+  { value: 'Factor ED', label: 'Factor ED' },
+  { value: 'Factor DX', label: 'Factor DX' },
 ];
 
 const formSchema = z.object({
   placa: z.string().min(7, "A placa deve ter pelo menos 7 caracteres.").max(8, "A placa deve ter no máximo 8 caracteres.").regex(/^[A-Z]{3}[0-9][A-Z0-9][0-9]{2}$/, "Formato de placa inválido (Ex: AAA1B23)."),
   model: z.string().optional(),
   type: z.enum(['nova', 'usada']).optional(),
-  status: z.enum(['active', 'inadimplente', 'recolhida', 'relocada', 'manutencao', 'alugada', 'indisponivel_rastreador', 'indisponivel_emplacamento']).optional(),
+  color: z.enum(['branca', 'preta', 'azul', 'vermelha', 'cinza']).optional(),
+  status: z.enum(['active', 'inadimplente', 'recolhida', 'relocada', 'manutencao', 'alugada', 'indisponivel_rastreador', 'indisponivel_emplacamento', 'furto_roubo', 'apropriacao_indebita']).optional(),
   valorSemanal: z.coerce.number().positive("O valor semanal deve ser positivo.").optional().or(z.literal('')),
   data_ultima_mov: z.date().optional(),
   tempo_ocioso_dias: z.coerce.number().min(0, "Os dias parado não podem ser negativos.").optional().or(z.literal('')),
@@ -76,6 +89,7 @@ const defaultFormValues: FormValues = {
   placa: "",
   model: "",
   type: undefined,
+  color: undefined,
   status: undefined,
   valorSemanal: undefined,
   data_ultima_mov: undefined,
@@ -102,7 +116,8 @@ export function AddMotorcycleForm({ onSubmit, onCancel, initialData }: AddMotorc
         placa: initialData.placa || "",
         model: initialData.model || "",
         type: initialData.type || undefined,
-        status: initialData.status || undefined,
+        color: initialData.color || undefined,
+        status: (initialData.status as any) || undefined,
         valorSemanal: initialData.valorSemanal !== undefined ? initialData.valorSemanal : '',
         // Convert string date from initialData to Date object for the calendar
         data_ultima_mov: initialData.data_ultima_mov && isValid(parseISO(initialData.data_ultima_mov)) ? parseISO(initialData.data_ultima_mov) : undefined,
@@ -122,6 +137,7 @@ export function AddMotorcycleForm({ onSubmit, onCancel, initialData }: AddMotorc
       placa: values.placa,
       model: values.model || undefined,
       type: values.type || undefined,
+      color: values.color || undefined,
       status: values.status || undefined,
       valorSemanal: values.valorSemanal ? parseFloat(String(values.valorSemanal)) : undefined,
       data_criacao: initialData?.data_criacao || new Date().toISOString(), // Preserve original or set new creation date
@@ -159,7 +175,7 @@ export function AddMotorcycleForm({ onSubmit, onCancel, initialData }: AddMotorc
             )}
           />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <FormField
               control={form.control}
               name="model"
@@ -196,6 +212,28 @@ export function AddMotorcycleForm({ onSubmit, onCancel, initialData }: AddMotorc
                     </FormControl>
                     <SelectContent>
                       {motorcycleTypeOptions.map(opt => (
+                        <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="color"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Cor</FormLabel>
+                  <Select onValueChange={field.onChange} value={field.value || ""}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecione a cor" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {motorcycleColorOptions.map(opt => (
                         <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
                       ))}
                     </SelectContent>

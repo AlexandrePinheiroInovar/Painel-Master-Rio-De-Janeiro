@@ -2,61 +2,104 @@
 // Usado para unificar variações de nomes de modelos na interface
 
 /**
- * Normaliza nomes de modelos Shineray SHI para unificar variações
+ * Normaliza nomes de modelos SHI para unificar variações
  * @param model - Nome do modelo original
  * @returns Nome do modelo normalizado
  */
-export function normalizeShinerayModel(model: string): string {
+export function normalizeSHIModel(model: string): string {
   const trimmedModel = model.trim();
   
-  // Unificar todos os modelos Shineray SHI 175 como SHINERAY SHI 175
-  if (trimmedModel === 'SHINERAY SHI 175' ||
-      trimmedModel === 'SHINERAY SHI 175 INJETADA' ||
-      trimmedModel === 'SHINERAY SHI 175s EFI 2025' ||
-      trimmedModel === 'SHINERAY SHI 175s EFI' ||
+  // Unificar modelos SHI 175 Carburada
+  if (trimmedModel === 'SHI 175 CARBURADA' ||
+      trimmedModel === 'SHI 175 Carburada' ||
       trimmedModel === 'SHINERAY SHI 175 CARBURADA' ||
-      trimmedModel === 'SHINERAY SHI 175 2024') {
-    return 'SHINERAY SHI 175';
+      trimmedModel === 'SHI175 CARBURADA') {
+    return 'SHI 175 Carburada';
   }
   
-  // Adicione aqui outras normalizações conforme necessário
-  // Exemplo:
-  // if (trimmedModel === 'HONDA CG 160' || trimmedModel === 'HONDA CG160') {
-  //   return 'HONDA CG 160';
-  // }
-  
-  return trimmedModel;
-}
-
-/**
- * Normaliza nomes de modelos Dafra para unificar variações
- * @param model - Nome do modelo original
- * @returns Nome do modelo normalizado
- */
-export function normalizeDafraModel(model: string): string {
-  const trimmedModel = model.trim();
-  
-  // Unificar modelos Dafra NH 190
-  if (trimmedModel === 'DAFRA NH 190' ||
-      trimmedModel === 'DAFRA NH190') {
-    return 'DAFRA NH190';
+  // Unificar modelos SHI 175 Injetada
+  if (trimmedModel === 'SHI 175 INJETADA' ||
+      trimmedModel === 'SHI 175 Injetada' ||
+      trimmedModel === 'SHINERAY SHI 175 INJETADA' ||
+      trimmedModel === 'SHI175 INJETADA' ||
+      trimmedModel === 'SHI 175s EFI') {
+    return 'SHI 175 Injetada';
   }
   
   return trimmedModel;
 }
 
 /**
- * Normaliza nomes de modelos Haojue para unificar variações
+ * Normaliza nomes de modelos JEF para unificar variações
  * @param model - Nome do modelo original
  * @returns Nome do modelo normalizado
  */
-export function normalizeHaojueModel(model: string): string {
+export function normalizeJEFModel(model: string): string {
   const trimmedModel = model.trim();
   
-  // Unificar modelos Haojue DK160
-  if (trimmedModel === 'HAOJUE DK160' ||
-      trimmedModel === 'HAOJUE DK 160') {
-    return 'HAOJUE DK160';
+  // Unificar modelos JEF 150
+  if (trimmedModel === 'JEF 150' ||
+      trimmedModel === 'JEF150' ||
+      trimmedModel === 'JIALING JEF 150') {
+    return 'JEF 150';
+  }
+  
+  return trimmedModel;
+}
+
+/**
+ * Normaliza nomes de modelos DK para unificar variações
+ * @param model - Nome do modelo original
+ * @returns Nome do modelo normalizado
+ */
+export function normalizeDKModel(model: string): string {
+  const trimmedModel = model.trim();
+  
+  // Unificar modelos DK 150
+  if (trimmedModel === 'DK 150' ||
+      trimmedModel === 'DK150' ||
+      trimmedModel === 'HAOJUE DK 150') {
+    return 'DK 150';
+  }
+  
+  // Unificar modelos DK 160
+  if (trimmedModel === 'DK 160' ||
+      trimmedModel === 'DK160' ||
+      trimmedModel === 'HAOJUE DK 160' ||
+      trimmedModel === 'HAOJUE DK160') {
+    return 'DK 160';
+  }
+  
+  return trimmedModel;
+}
+
+/**
+ * Normaliza nomes de modelos NK e Factor para unificar variações
+ * @param model - Nome do modelo original
+ * @returns Nome do modelo normalizado
+ */
+export function normalizeOtherModels(model: string): string {
+  const trimmedModel = model.trim();
+  
+  // Unificar modelos NK 150
+  if (trimmedModel === 'NK 150' ||
+      trimmedModel === 'NK150' ||
+      trimmedModel === 'CFMOTO NK 150') {
+    return 'NK 150';
+  }
+  
+  // Unificar modelos Factor ED
+  if (trimmedModel === 'Factor ED' ||
+      trimmedModel === 'FACTOR ED' ||
+      trimmedModel === 'YAMAHA Factor ED') {
+    return 'Factor ED';
+  }
+  
+  // Unificar modelos Factor DX
+  if (trimmedModel === 'Factor DX' ||
+      trimmedModel === 'FACTOR DX' ||
+      trimmedModel === 'YAMAHA Factor DX') {
+    return 'Factor DX';
   }
   
   return trimmedModel;
@@ -71,9 +114,10 @@ export function normalizeMotorcycleModel(model: string): string {
   if (!model) return '';
   
   // Aplicar normalizações específicas
-  let normalizedModel = normalizeShinerayModel(model);
-  normalizedModel = normalizeDafraModel(normalizedModel);
-  normalizedModel = normalizeHaojueModel(normalizedModel);
+  let normalizedModel = normalizeSHIModel(model);
+  normalizedModel = normalizeJEFModel(normalizedModel);
+  normalizedModel = normalizeDKModel(normalizedModel);
+  normalizedModel = normalizeOtherModels(normalizedModel);
   
   return normalizedModel;
 }

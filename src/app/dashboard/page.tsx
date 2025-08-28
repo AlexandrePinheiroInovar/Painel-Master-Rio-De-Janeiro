@@ -34,6 +34,8 @@ const statusColorsForChart: Record<string, string> = {
   'recolhida': 'hsl(var(--chart-1))',
   'indisponivel_rastreador': 'hsl(25 95% 53%)', // Orange
   'indisponivel_emplacamento': 'hsl(271 81% 56%)', // Purple
+  'furto_roubo': 'hsl(0 84% 60%)', // Red
+  'apropriacao_indebita': 'hsl(340 82% 52%)', // Pink/Red
   'N/Definido': 'hsl(var(--muted-foreground))',
 };
 
@@ -276,6 +278,8 @@ const processMonthData = (motorcycles: Motorcycle[], selectedMonth: number, sele
                                 break;
                             case 'indisponivel_rastreador':
                             case 'indisponivel_emplacamento':
+                            case 'furto_roubo':
+                            case 'apropriacao_indebita':
                                 // Estes status são contados separadamente se necessário
                                 break;
                         }

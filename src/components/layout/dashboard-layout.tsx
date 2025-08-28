@@ -135,6 +135,8 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
       relocada: 0,
       indisponivel_rastreador: 0,
       indisponivel_emplacamento: 0,
+      furto_roubo: 0,
+      apropriacao_indebita: 0,
     };
 
     representativeMotorcycles.forEach(moto => {

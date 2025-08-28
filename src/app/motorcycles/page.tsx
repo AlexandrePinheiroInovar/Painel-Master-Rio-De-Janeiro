@@ -6,7 +6,7 @@ import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { PageHeader } from "@/components/shared/page-header";
 import { MotorcycleFilters } from "@/components/motorcycles/motorcycle-filters";
 import { MotorcycleList } from "@/components/motorcycles/motorcycle-list";
-import type { Motorcycle, MotorcycleStatus, MotorcycleType } from '@/lib/types';
+import type { Motorcycle, MotorcycleStatus, MotorcycleType, MotorcycleColor } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { Download, PlusCircle, Edit, Trash2 } from 'lucide-react';
 import { MotorcycleIcon } from '@/components/icons/motorcycle-icon';
@@ -42,6 +42,7 @@ import { ALLOWED_MOTORCYCLE_USER_IDS } from '@/lib/utils/permissions';
 export type MotorcyclePageFilters = {
   status: MotorcycleStatus | 'all';
   model: string | 'all';
+  color: MotorcycleColor | 'all';
   searchTerm: string;
 };
 
@@ -49,6 +50,7 @@ export default function MotorcyclesPage() {
   const [filters, setFilters] = useState<MotorcyclePageFilters>({
     status: 'all',
     model: 'all',
+    color: 'all',
     searchTerm: '',
   });
   const [isModalOpen, setIsModalOpen] = useState(false);

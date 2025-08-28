@@ -11,7 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { MotorcycleStatus } from '@/lib/types';
+import type { MotorcycleStatus, MotorcycleColor } from '@/lib/types';
 import { Search, SlidersHorizontal, QrCode } from 'lucide-react';
 import type { MotorcyclePageFilters } from '@/app/motorcycles/page';
 
@@ -30,28 +30,41 @@ const statusOptions: { value: MotorcycleStatus | 'all'; label: string }[] = [
   { value: 'manutencao', label: 'Manutenção' },
   { value: 'indisponivel_rastreador', label: 'Indisponível Rastreador' },
   { value: 'indisponivel_emplacamento', label: 'Indisponível Emplacamento' },
+  { value: 'furto_roubo', label: 'Furto/Roubo' },
+  { value: 'apropriacao_indebita', label: 'Apropriação Indébita' },
 ];
 
-// Mock data for models, replace with actual data source if available
+// Modelos de motos atualizados
 const modelOptions: { value: string; label: string }[] = [
   { value: 'all', label: 'Todos os Modelos' },
-  { value: 'XTZ 150 Crosser', label: 'XTZ 150 Crosser' },
-  { value: 'CG 160 Titan', label: 'CG 160 Titan' },
-  { value: 'NMAX 160', label: 'NMAX 160' },
-  { value: 'PCX 150', label: 'PCX 150' },
-  { value: 'Factor 150', label: 'Factor 150' },
-  { value: 'Biz 125', label: 'Biz 125' },
-  { value: 'Honda Pop 110i', label: 'Honda Pop 110i' },
+  { value: 'SHI 175 Carburada', label: 'SHI 175 Carburada' },
+  { value: 'SHI 175 Injetada', label: 'SHI 175 Injetada' },
+  { value: 'JEF 150', label: 'JEF 150' },
+  { value: 'DK 150', label: 'DK 150' },
+  { value: 'DK 160', label: 'DK 160' },
+  { value: 'NK 150', label: 'NK 150' },
+  { value: 'Factor ED', label: 'Factor ED' },
+  { value: 'Factor DX', label: 'Factor DX' },
+];
+
+const colorOptions: { value: MotorcycleColor | 'all'; label: string }[] = [
+  { value: 'all', label: 'Todas as Cores' },
+  { value: 'branca', label: 'Branca' },
+  { value: 'preta', label: 'Preta' },
+  { value: 'azul', label: 'Azul' },
+  { value: 'vermelha', label: 'Vermelha' },
+  { value: 'cinza', label: 'Cinza' },
 ];
 
 export function MotorcycleFilters({ onFilterChange, initialFilters }: MotorcycleFiltersProps) {
   const [searchTerm, setSearchTerm] = useState(initialFilters.searchTerm);
   const [status, setStatus] = useState<MotorcycleStatus | 'all'>(initialFilters.status);
   const [model, setModel] = useState<string | 'all'>(initialFilters.model);
+  const [color, setColor] = useState<MotorcycleColor | 'all'>(initialFilters.color);
 
   useEffect(() => {
-    onFilterChange({ searchTerm, status, model });
-  }, [searchTerm, status, model, onFilterChange]);
+    onFilterChange({ searchTerm, status, model, color });
+  }, [searchTerm, status, model, color, onFilterChange]);
 
   const handleStatusChange = useCallback((value: string) => {
     setStatus(value as MotorcycleStatus | 'all');
@@ -61,13 +74,17 @@ export function MotorcycleFilters({ onFilterChange, initialFilters }: Motorcycle
     setModel(value);
   }, []);
 
+  const handleColorChange = useCallback((value: string) => {
+    setColor(value as MotorcycleColor | 'all');
+  }, []);
+
   return (
     <div className="mb-6 p-6 border rounded-lg bg-card shadow-lg">
       <div className="flex items-center mb-4">
         <SlidersHorizontal className="h-5 w-5 mr-2 text-primary" />
         <h3 className="text-lg font-semibold text-foreground">Filtros</h3>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
         <div className="lg:col-span-1 relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
@@ -101,6 +118,21 @@ export function MotorcycleFilters({ onFilterChange, initialFilters }: Motorcycle
             </SelectTrigger>
             <SelectContent>
               {modelOptions.map(option => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div>
+          <Select value={color} onValueChange={handleColorChange}>
+            <SelectTrigger id="color-filter" className="w-full">
+              <SelectValue placeholder="Todas as Cores" />
+            </SelectTrigger>
+            <SelectContent>
+              {colorOptions.map(option => (
                 <SelectItem key={option.value} value={option.value}>
                   {option.label}
                 </SelectItem>

@@ -1,5 +1,6 @@
-export type MotorcycleStatus = 'active' | 'alugada' | 'inadimplente' | 'manutencao' | 'recolhida' | 'relocada' | 'indisponivel_rastreador' | 'indisponivel_emplacamento';
+export type MotorcycleStatus = 'active' | 'alugada' | 'inadimplente' | 'manutencao' | 'recolhida' | 'relocada' | 'indisponivel_rastreador' | 'indisponivel_emplacamento' | 'furto_roubo' | 'apropriacao_indebita';
 export type MotorcycleType = 'nova' | 'usada';
+export type MotorcycleColor = 'branca' | 'preta' | 'azul' | 'vermelha' | 'cinza';
 
 export interface Motorcycle {
   id: string;
@@ -7,6 +8,7 @@ export interface Motorcycle {
   model?: string;
   status?: MotorcycleStatus;
   type?: MotorcycleType;
+  color?: MotorcycleColor;
   franqueado?: string;
   data_criacao?: string; // ISO 8601 format: "YYYY-MM-DDTHH:mm:ss.sssZ"
   data_ultima_mov?: string; // ISO 8601 format: "YYYY-MM-DDTHH:mm:ss.sssZ"
