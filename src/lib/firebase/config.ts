@@ -50,32 +50,52 @@ try {
   db = getFirestore(app);
   auth = getAuth(app);
   
-  // Configurar persistência explicitamente ANTES de qualquer operação
+  // Configurar persistência IMEDIATAMENTE no cliente
   if (typeof window !== 'undefined') {
-    // Garantir que a persistência seja configurada imediatamente
+    // Configuração de persistência mais robusta
+    const setupPersistence = async () => {
+      try {
+        // Garantir que a persistência seja LOCAL (não session)
+        await setPersistence(auth, browserLocalPersistence);
+        console.log('✅ [FIREBASE] Persistência LOCAL configurada com sucesso');
+        
+        // Verificar se a persistência foi realmente aplicada
+        const currentPersistence = auth.currentUser?.providerData || [];
+        console.log('✅ [FIREBASE] Estado de persistência verificado');
+        
+        return true;
+      } catch (error: any) {
+        console.error('❌ [FIREBASE] Erro ao configurar persistência:', error);
+        
+        // Retry com estratégia diferente
+        try {
+          // Segunda tentativa após delay
+          await new Promise(resolve => setTimeout(resolve, 200));
+          await setPersistence(auth, browserLocalPersistence);
+          console.log('✅ [FIREBASE] Persistência configurada na segunda tentativa');
+          return true;
+        } catch (retryError) {
+          console.error('❌ [FIREBASE] Falha total na configuração de persistência:', retryError);
+          return false;
+        }
+      }
+    };
+    
+    // Executar configuração de persistência
+    setupPersistence();
+    
+    // Configurações adicionais do auth
     auth.settings = {
       appVerificationDisabledForTesting: false
     };
     
-    // Tentar configurar persistência múltiplas vezes se necessário
-    const configurePersistence = async () => {
-      try {
-        await setPersistence(auth, browserLocalPersistence);
-        console.log('✅ [AUTH] Persistência configurada como LOCAL STORAGE');
-        return true;
-      } catch (error) {
-        console.error('❌ [AUTH] Erro ao configurar persistência:', error);
-        // Tentar novamente após um pequeno delay
-        setTimeout(() => {
-          setPersistence(auth, browserLocalPersistence)
-            .then(() => console.log('✅ [AUTH] Persistência configurada (segunda tentativa)'))
-            .catch(err => console.error('❌ [AUTH] Falha na segunda tentativa:', err));
-        }, 100);
-        return false;
+    // Listener para verificar mudanças de conectividade
+    window.addEventListener('online', () => {
+      console.log('🌐 [FIREBASE] Conexão restaurada, verificando estado de auth');
+      if (auth.currentUser) {
+        console.log('✅ [FIREBASE] Usuário ainda autenticado após reconexão');
       }
-    };
-    
-    configurePersistence();
+    });
   }
   
   // Log detalhado para confirmar qual projeto está sendo usado

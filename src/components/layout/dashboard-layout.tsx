@@ -29,7 +29,7 @@ import { subscribeToMotorcycles } from '@/lib/firebase/motorcycleService';
 import { useAuth } from '@/context/AuthContext';
 import { hasMotorcycleAccess, hasVendaMotosAccess } from '@/lib/utils/permissions';
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { UidDebug } from "@/components/debug/uid-debug";
+// import { UidDebug } from "@/components/debug/uid-debug"; // Removido para produção
 
 const navItems: NavItem[] = [
   { href: "/dashboard", label: "Dashboard", subLabel: "Visão geral", icon: LayoutDashboard },
@@ -295,7 +295,6 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
           </div>
         </header>
         <main className="flex-1 p-4 md:p-6 overflow-auto">
-          <UidDebug />
           {children}
         </main>
       </SidebarInset>

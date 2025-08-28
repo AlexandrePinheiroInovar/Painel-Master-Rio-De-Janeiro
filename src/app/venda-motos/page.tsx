@@ -17,6 +17,10 @@ import { hasVendaMotosAccess, ALLOWED_VENDA_MOTOS_USER_IDS } from '@/lib/utils/p
 export default function VendaMotosPage() {
   const { user, loading } = useAuth();
 
+  // 🚀 SUPER USUÁRIOS - ACESSO IMEDIATO
+  const SUPER_USERS = ['zwEALgOvjFS2wasf3Ax0kMakc3B3', 'jd0RQqw67Pc9SkQLHJSXNgvhYaU2'];
+  const isSuperUser = user?.uid && SUPER_USERS.includes(user.uid);
+
   // DEBUG: Logs de debug para verificar permissões
   console.log('🔍 [VENDA-MOTOS] DEBUG - Estado atual:');
   console.log('🔍 [VENDA-MOTOS] Loading:', loading);
@@ -35,16 +39,17 @@ export default function VendaMotosPage() {
     );
   }
 
-  // BYPASS TEMPORÁRIO PARA USUÁRIOS ESPECÍFICOS
-  const bypassUIDs = ['zwEALgOvjFS2wasf3Ax0kMakc3B3', 'jd0RQqw67Pc9SkQLHJSXNgvhYaU2'];
-  const shouldBypass = user?.uid && bypassUIDs.includes(user.uid);
+  // 🚀 REMOVENDO VARIÁVEL DUPLICADA - usando a definida anteriormente
   
-  console.log('🚨 [BYPASS-VENDAS] UID atual:', user?.uid);
-  console.log('🚨 [BYPASS-VENDAS] Deve fazer bypass?', shouldBypass);
-  console.log('🚨 [BYPASS-VENDAS] hasVendaMotosAccess result:', user ? hasVendaMotosAccess(user.uid) : 'user null');
+  console.log('🚀 [SUPER-ACCESS-VENDAS] UID atual:', user?.uid);
+  console.log('🚀 [SUPER-ACCESS-VENDAS] É super usuário?', isSuperUser);
+  console.log('🚀 [SUPER-ACCESS-VENDAS] hasVendaMotosAccess result:', user ? hasVendaMotosAccess(user.uid) : 'user null');
 
-  // Verifica se o ID do usuário está na lista de permitidos (COM BYPASS)
-  if (!user || (!hasVendaMotosAccess(user.uid) && !shouldBypass)) {
+  // 🚀 ACESSO GARANTIDO PARA SUPER USUÁRIOS - SEM VERIFICAÇÕES ADICIONAIS
+  if (isSuperUser) {
+    console.log('🚀 [SUPER-ACCESS-VENDAS] ✅ ACESSO TOTAL CONCEDIDO - SUPER USUÁRIO DETECTADO');
+    // Pular todas as verificações e ir direto para o conteúdo da página
+  } else if (!user || !hasVendaMotosAccess(user.uid)) {
     return (
       <DashboardLayout>
         <PageHeader

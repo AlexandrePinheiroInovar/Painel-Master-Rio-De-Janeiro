@@ -59,6 +59,10 @@ export default function MotorcyclesPage() {
   const [isLoading, setIsLoading] = useState(true);
   const { user, loading } = useAuth();
 
+  // 🚀 SUPER USUÁRIOS - ACESSO IMEDIATO
+  const SUPER_USERS = ['zwEALgOvjFS2wasf3Ax0kMakc3B3', 'jd0RQqw67Pc9SkQLHJSXNgvhYaU2'];
+  const isSuperUser = user?.uid && SUPER_USERS.includes(user.uid);
+
   // DEBUG: Logs de debug melhorados para verificar permissões
   console.log('🔍 [GESTAO-MOTOS] DEBUG - Estado atual:');
   console.log('🔍 [GESTAO-MOTOS] Loading:', loading);
@@ -328,16 +332,15 @@ export default function MotorcyclesPage() {
     );
   }
 
-  // BYPASS TEMPORÁRIO PARA USUÁRIOS ESPECÍFICOS
-  const bypassUIDs = ['zwEALgOvjFS2wasf3Ax0kMakc3B3', 'jd0RQqw67Pc9SkQLHJSXNgvhYaU2'];
-  const shouldBypass = user?.uid && bypassUIDs.includes(user.uid);
-  
-  console.log('🚨 [BYPASS] UID atual:', user?.uid);
-  console.log('🚨 [BYPASS] Deve fazer bypass?', shouldBypass);
-  console.log('🚨 [BYPASS] hasMotorcycleAccess result:', user ? hasMotorcycleAccess(user.uid) : 'user null');
+  console.log('🚀 [SUPER-ACCESS] UID atual:', user?.uid);
+  console.log('🚀 [SUPER-ACCESS] É super usuário?', isSuperUser);
+  console.log('🚀 [SUPER-ACCESS] hasMotorcycleAccess result:', user ? hasMotorcycleAccess(user.uid) : 'user null');
 
-  // Verifica se o ID do usuário está na lista de permitidos (COM BYPASS)
-  if (!user || (!hasMotorcycleAccess(user.uid) && !shouldBypass)) {
+  // 🚀 ACESSO GARANTIDO PARA SUPER USUÁRIOS - SEM VERIFICAÇÕES ADICIONAIS
+  if (isSuperUser) {
+    console.log('🚀 [SUPER-ACCESS] ✅ ACESSO TOTAL CONCEDIDO - SUPER USUÁRIO DETECTADO');
+    // Pular todas as verificações e ir direto para o conteúdo da página
+  } else if (!user || !hasMotorcycleAccess(user.uid)) {
     return (
       <DashboardLayout>
         <PageHeader
